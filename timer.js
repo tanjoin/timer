@@ -64,10 +64,11 @@ function show(value) {
   document.getElementById("min").innerText = ("0" + Math.floor(v / 60)).slice(-2);
   document.getElementById("sec").innerText = ("0" + v % 60).slice(-2);
   if (v <= 0) {
-    alert("時間です");
+    window.blur();
     window.focus();
     reset();
     sound(function() {
+      alert("時間です");
       onStop();
     });
   }
