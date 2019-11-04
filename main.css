@@ -21,7 +21,7 @@ main {
 #countdown > div {
   display: inline-block;
   margin: auto;
-  height: 0;
+  height: 1vh;
   vertical-align: middle;
 }
 
@@ -44,12 +44,4 @@ main {
 #buttonarea.move {
   -webkit-transform: translate(0px, -100px);
   transform: translate(0px, -100px);
-}
-
-#min {
-  background: orange;
-}
-
-#sec {
-  background: green;
 }

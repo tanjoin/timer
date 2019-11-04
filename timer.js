@@ -2,6 +2,12 @@ var timer;
 var old_min;
 var old_sec;
 
+window.document.onkeydown = function(event) {
+  if (event.key === 's') {
+    clickTimer();
+  }
+}
+
 document.getElementById("main").addEventListener("mousemove", function(event) {
   if (event.clientY >= document.getElementById("buttonarea").clientHeight && timer) {
     document.getElementById("buttonarea").classList.add('move');
