@@ -13,8 +13,8 @@ document.getElementById("main").addEventListener("mousemove", function(event) {
 function onStart() {
   document.getElementById("min").contentEditable  = false;
   document.getElementById("sec").contentEditable  = false;
-  old_min = document.getElementById("min").innerText;
-  old_sec = document.getElementById("sec").innerText;
+  old_min = `0${document.getElementById("min").innerText}`.slice(-2);
+  old_sec = `0${document.getElementById("sec").innerText}`.slice(-2);
   document.getElementById("startOrStop").innerText = "Stop";
   timer = setInterval("countDown()", 1000);
   document.getElementById("buttonarea").classList.add('move');
