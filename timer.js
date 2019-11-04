@@ -71,8 +71,7 @@ function show(value) {
     window.blur();
     window.focus();
     reset();
-    sound(function() {
-      alert("時間です");
+    sound(() => {
       onStop();
     });
   }
@@ -80,8 +79,8 @@ function show(value) {
 
 function sound(callback) {
   var sound1 = new Audio("data:audio/wav;base64," + soundBase64);
-  sound1.addEventListener('ended', callback);
   sound1.play();
+  callback();
 }
 
 function reset() {
