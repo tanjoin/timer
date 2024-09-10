@@ -36,7 +36,7 @@ window.document.onkeydown = function(event) {
     clickTimer();
   } else if (event.key === 'u') {
     let userInput = window.prompt("URL", url);
-    if (userInput.includes("http")) {
+    if (userInput && userInput.includes("http")) {
       url = userInput;
     }
   } else if (event.key === 't') {
@@ -117,7 +117,7 @@ function show(value) {
     reset();
     sound(() => {
       if (url) {
-        window.open(url, '_blank').focus();
+        window.open(url, '_blank');
       }
       onStop();
     });
