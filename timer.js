@@ -9,7 +9,7 @@ window.onload = () => {
   if (min !== null && sec !== null) {
     reset(min, sec);
   }
-  window.history.replaceState(0, 0, "/");
+  window.history.replaceState(null, null, window.location.pathname);
 }
 
 window.document.onkeydown = function(event) {
