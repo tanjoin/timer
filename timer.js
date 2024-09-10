@@ -1,20 +1,47 @@
-var timer;
-var old_min;
-var old_sec;
+let timer;
+let old_min;
+let old_sec;
+let url;
 
 window.onload = () => {
   const searchParams = new URLSearchParams(decodeURI(window.location.search));
-  var min = searchParams.get('min') || searchParams.get('m');
-  var sec = searchParams.get('sec') || searchParams.get('s');
+
+  const min = searchParams.get('min') || searchParams.get('m');
+  const sec = searchParams.get('sec') || searchParams.get('s');
   if (min !== null && sec !== null) {
     reset(min, sec);
   }
-  window.history.replaceState(null, null, window.location.pathname);
+
+  if (searchParams.get('url')) {
+    url = searchParams.get('url');
+  }
+  
+  let target = searchParams.get('target');
+  targetTime(target);
+}
+
+function targetTime(target) {
+  if (target && target.includes(':')) {
+    let d1 = new Date();
+    d1.setHours(target.split(':')[0]);
+    d1.setMinutes(target.split(':')[1]);
+    let d2 = new Date();
+    let diff = d1.getTime() - d2.getTime();
+    reset(Math.floor(diff / 60000), Math.floor(diff / 1000) % 60);
+  }
 }
 
 window.document.onkeydown = function(event) {
   if (event.key === 's') {
     clickTimer();
+  } else if (event.key === 'u') {
+    let userInput = window.prompt("URL", url);
+    if (userInput.includes("http")) {
+      url = userInput;
+    }
+  } else if (event.key === 't') {
+    let userInput = window.prompt("何時まで？（HH:mm）");
+    targetTime(userInput);
   }
 }
 
@@ -30,8 +57,8 @@ function onStart() {
   silentSound();
   document.getElementById("min").contentEditable  = false;
   document.getElementById("sec").contentEditable  = false;
-  old_min = `0${document.getElementById("min").innerText}`.slice(-2);
-  old_sec = `0${document.getElementById("sec").innerText}`.slice(-2);
+  old_min = `${document.getElementById("min").innerText}`.padStart(2, "0");
+  old_sec = `${document.getElementById("sec").innerText}`.padStart(2, "0");
   document.getElementById("startOrStop").innerText = "Stop";
   timer = setInterval("countDown()", 1000);
   document.getElementById("buttonarea").classList.add('move');
@@ -82,13 +109,16 @@ function countDown() {
 
 function show(value) {
   var v = parseInt(value);
-  document.getElementById("min").innerText = ("0" + Math.floor(v / 60)).slice(-2);
-  document.getElementById("sec").innerText = ("0" + v % 60).slice(-2);
+  document.getElementById("min").innerText = `${Math.floor(v / 60)}`.padStart(2, "0");
+  document.getElementById("sec").innerText = `${v % 60}`.padStart(2, "0");
   if (v <= 0) {
     window.blur();
     window.focus();
     reset();
     sound(() => {
+      if (url) {
+        window.open(url, '_blank').focus();
+      }
       onStop();
     });
   }
@@ -112,12 +142,12 @@ function reset(min, sec) {
   if (min === undefined) {
     document.getElementById("min").innerText = old_min;
   } else {
-    document.getElementById("min").innerText = ("0" + min).slice(-2);
+    document.getElementById("min").innerText = `${min}`.padStart(2, "0");
   }
   if (sec === undefined) {
     document.getElementById("sec").innerText = old_sec;
   } else {
-    document.getElementById("sec").innerText = ("0" + sec).slice(-2);
+    document.getElementById("sec").innerText = `${sec}`.padStart(2, "0");
   }
 }
 
