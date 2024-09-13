@@ -98,7 +98,7 @@ function countDown() {
 
 function show(value) {
   var v = parseInt(value);
-  document.getElementById("min").innerText = `${Max.max(Math.floor(v / 60), 0)}`.padStart(2, "0");
+  document.getElementById("min").innerText = `${Math.max(Math.floor(v / 60), 0)}`.padStart(2, "0");
   document.getElementById("sec").innerText = `${Math.max(v % 60, 0)}`.padStart(2, "0");
   if (v <= 0 & is_running) {
     window.focus();
