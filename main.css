@@ -11,22 +11,40 @@ main {
 }
 
 #countdown {
-  font-size: 32vh;
+  font-size: 24vw;
   color: #FFF;
   background: #000;
   text-align: center;
-  height: 100%;
+  position: relative;
 }
 
 #countdown > div {
   display: inline-block;
   margin: auto;
-  height: 1vh;
+  height: auto;
+  vertical-align: middle;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#min, #sec {
+  display: inline-block;
+  height: auto;
+  margin: 0 auto;
+  vertical-align: middle;
+}
+
+#colon {
+  display: inline-block;
+  height: auto;
+  margin: 0 auto;
   vertical-align: middle;
 }
 
 #buttonarea {
-  font-size: 2em;
+  font-size: 3vw;
   color: #FFF;
   background: #444;
   text-align: center;

@@ -2,6 +2,8 @@ let timer;
 let old_min;
 let old_sec;
 let url;
+let is_running = false;
+let end;
 
 window.onload = () => {
   const searchParams = new URLSearchParams(decodeURI(window.location.search));
@@ -54,17 +56,24 @@ document.getElementById("main").addEventListener("mousemove", function(event) {
 });
 
 function onStart() {
-  silentSound();
+  is_running = true;
+  start = new Date();
+  end = new Date();
+  end.setMinutes(end.getMinutes() + parseInt(document.getElementById("min").innerText));
+  end.setSeconds(end.getSeconds() + parseInt(document.getElementById("sec").innerText));
   document.getElementById("min").contentEditable  = false;
   document.getElementById("sec").contentEditable  = false;
   old_min = `${document.getElementById("min").innerText}`.padStart(2, "0");
   old_sec = `${document.getElementById("sec").innerText}`.padStart(2, "0");
   document.getElementById("startOrStop").innerText = "Stop";
   timer = setInterval("countDown()", 1000);
+  countDown();
   document.getElementById("buttonarea").classList.add('move');
+  silentSound();
 }
 
 function onStop() {
+  is_running = false;
   document.getElementById("min").contentEditable  = true;
   document.getElementById("sec").contentEditable  = true;
   document.getElementById("startOrStop").innerText = "Start";
@@ -82,52 +91,31 @@ function clickTimer() {
 }
 
 function countDown() {
-  var min = document.getElementById("min").innerText;
-  var sec = document.getElementById("sec").innerText;
-
-  if (min === "" && sec === "") {
-    reset();
-    onStop();
-    return;
+  if (is_running) {
+    show((end.getTime() - new Date().getTime()) / 1000);
   }
-  if (min === "") {
-    min = 0;
-  }
-  min = parseInt(min);
-  if (sec === "") {
-    sec = 0;
-  }
-  sec = parseInt(sec);
-
-  if (min === 0 && sec === 0) {
-    onStop();
-    return;
-  }
-
-  show(min * 60 + sec - 1);
 }
 
 function show(value) {
   var v = parseInt(value);
-  document.getElementById("min").innerText = `${Math.floor(v / 60)}`.padStart(2, "0");
-  document.getElementById("sec").innerText = `${v % 60}`.padStart(2, "0");
-  if (v <= 0) {
-    window.blur();
+  document.getElementById("min").innerText = `${Max.max(Math.floor(v / 60), 0)}`.padStart(2, "0");
+  document.getElementById("sec").innerText = `${Math.max(v % 60, 0)}`.padStart(2, "0");
+  if (v <= 0 & is_running) {
     window.focus();
-    reset();
-    sound(() => {
-      if (url) {
-        window.open(url, '_blank');
-      }
-      onStop();
-    });
+    onStop();
+    if (url) {
+      window.open(url, '_blank');
+    }
+    sound();
   }
 }
 
 function sound(callback) {
   var sound1 = new Audio("data:audio/wav;base64," + soundBase64);
   sound1.play();
-  callback();
+  if (callback) {
+    callback();
+  }
 }
 
 function silentSound(callback) {
