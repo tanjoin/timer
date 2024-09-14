@@ -14,11 +14,11 @@ window.onload = () => {
     reset(min, sec);
   }
 
-  if (searchParams.get('url')) {
-    url = searchParams.get('url');
+  if (searchParams.get('url') || searchParams.get('u')) {
+    url = searchParams.get('url') || searchParams.get('u');
   }
   
-  let target = searchParams.get('target');
+  let target = searchParams.get('target') || searchParams.get('t');
   targetTime(target);
 }
 
