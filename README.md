@@ -22,3 +22,16 @@ https://tanjoin.github.io/timer?m=1&s=0
 - `s` スタート・ストップ
 - `u` 遷移するURL
 - `t` 終了時間
+
+## Development
+
+- `node -v`
+  - v20.11.1
+- `npm -v`
+  - 10.2.4
+- `uname -v`
+  - Darwin Kernel Version 23.2.0: Wed Nov 15 21:53:34 PST 2023; root:xnu-10002.61.3~2/RELEASE_ARM64_T8103
+- `sw_vers`
+  - ProductName:            macOS
+  - ProductVersion:         14.2.1
+  - BuildVersion:           23C71

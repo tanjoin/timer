@@ -1,0 +1,14 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx ts-node",
+    "tsc": "npx tsc"
+  },
+  "author": "tanjoin",
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
