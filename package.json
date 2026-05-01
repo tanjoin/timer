@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npx ts-node",
-    "tsc": "npx tsc"
+    "tsc": "npx tsc",
+    "copy-static": "node scripts/copy-static.mjs",
+    "build": "npm run tsc && npm run copy-static",
+    "serve": "python3 -m http.server && open http://localhost:8000"
   },
   "author": "tanjoin",
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { SoundModel } from './sound_model';
+import { SoundModel } from './sound_model.js';
 
 export class SoundController {
 

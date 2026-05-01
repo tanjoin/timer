@@ -13,6 +13,7 @@ export class TimerModel {
     private _resetCallback: TimerModelResetCallback | null;
     private _countDownCallback: TimerModelCountDownCallback | null;
     private _url: string | null;
+    private _target: string | null;
 
     constructor() {
         this._isRunning = false;
@@ -29,17 +30,31 @@ export class TimerModel {
         this._endDate = null;
         this._timer = null;
         this._url = null;
+        this._target = null;
     }
 
     // Getters and setters
 
     set urlSearchParams(value: URLSearchParams) {
-        const min = value.get('min') || value.get('m') || '0';
-        const sec = value.get('sec') || value.get('s') || '0';
-        this._min = parseInt(min);
-        this._sec = parseInt(sec);
-        if (min && sec) {
+        const minParam = value.get('min') || value.get('m');
+        const secParam = value.get('sec') || value.get('s');
+        const min = minParam === null ? NaN : parseInt(minParam, 10);
+        const sec = secParam === null ? NaN : parseInt(secParam, 10);
+
+        if (Number.isFinite(min) && Number.isFinite(sec)) {
+            this._min = min;
+            this._sec = sec;
             this._resetCallback?.(this._min, this._sec);
+        }
+
+        const url = value.get('url') || value.get('u');
+        if (url !== null) {
+            this.setUrlByUserInput(url);
+        }
+
+        const target = value.get('target') || value.get('t');
+        if (target !== null) {
+            this.updateTargetTime(target);
         }
     }
 
@@ -105,6 +120,10 @@ export class TimerModel {
         this._url = value;
     }
 
+    get target(): string | null {
+        return this._target;
+    }
+
     // Callbacks
 
     set contentEditableCallback(value: TimerModelContentEditableCallback) {
@@ -142,13 +161,52 @@ export class TimerModel {
         this._timer = setInterval(() => {
             this.countDown();
         }, 1000);
+
+        // 開始直後の1秒待ちをなくすために即時反映
+        this.countDown();
+    }
+
+    public setUrlByUserInput(userInput: string): boolean {
+        if (userInput.startsWith('http://') || userInput.startsWith('https://')) {
+            this._url = userInput;
+            return true;
+        }
+
+        return false;
+    }
+
+    public updateTargetTime(target: string): boolean {
+        const matched = target.match(/^(\d{1,2}):(\d{2})$/);
+        if (!matched) {
+            return false;
+        }
+
+        const hour = parseInt(matched[1], 10);
+        const minute = parseInt(matched[2], 10);
+        if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+            return false;
+        }
+
+        this._target = target;
+        const targetDate = new Date();
+        targetDate.setHours(hour, minute, 0, 0);
+        if (targetDate.getTime() < Date.now()) {
+            targetDate.setDate(targetDate.getDate() + 1);
+        }
+
+        const diffSeconds = Math.floor((targetDate.getTime() - Date.now()) / 1000);
+        this._min = Math.floor(diffSeconds / 60);
+        this._sec = Math.max(diffSeconds % 60, 0);
+        this._resetCallback?.(this._min, this._sec);
+
+        return true;
     }
 
     private countDown(): void {
         if (this._isRunning && this._endDate) {
-            let diff = (this._endDate.getTime() - new Date().getTime()) / 1000;
-            let min = Math.max(Math.floor(diff / 60), 0);
-            let sec = Math.max(Math.floor(diff % 60), 0);
+            const diff = (this._endDate.getTime() - new Date().getTime()) / 1000;
+            const min = Math.max(Math.floor(diff / 60), 0);
+            const sec = Math.max(Math.floor(diff % 60), 0);
             this._countDownCallback?.(min, sec);
         }
     }

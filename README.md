@@ -20,8 +20,10 @@ https://tanjoin.github.io/timer?m=1&s=0
 ## Keyboard shortcut
 
 - `s` スタート・ストップ
+- `c` 時計モード ON/OFF
 - `u` 遷移するURL
 - `t` 終了時間
+- `h` 機能説明の表示
 
 ## Development
 
