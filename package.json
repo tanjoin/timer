@@ -1,0 +1,17 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx ts-node",
+    "tsc": "npx tsc",
+    "copy-static": "node scripts/copy-static.mjs",
+    "build": "npm run tsc && npm run copy-static",
+    "serve": "python3 -m http.server && open http://localhost:8000"
+  },
+  "author": "tanjoin",
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
