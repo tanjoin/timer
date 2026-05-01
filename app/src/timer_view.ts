@@ -6,6 +6,8 @@ export class TimerView {
     private _startOrStop: HTMLElement | null;
 
     private _urlSearchParamsCallback: TimerViewURLSearchParamsCallback | null;
+    private _mouseMoveCallback: TimerViewMouseMoveCallback | null;
+    private _buttonAreaClickCallback: TimerViewButtonAreaClickCallback | null;
 
     constructor() {
         this._main = document.getElementById('main');
@@ -15,16 +17,24 @@ export class TimerView {
         this._startOrStop = document.getElementById('startorstop');
 
         this._urlSearchParamsCallback = null;
+        this._mouseMoveCallback = null;
+        this._buttonAreaClickCallback = null;
 
         this.bindMouseMoveEvent();
     }
 
+    private bindButtonAreaClickEvent(): void {
+        this._buttonArea?.addEventListener('click', () => {
+            this._buttonAreaClickCallback?.();
+        });
+    }
+
     private bindMouseMoveEvent(): void {
         this._main?.addEventListener('mousemove', (event) => {
-            if (this._buttonArea && `clientHeight` in this._buttonArea && event.clientX >= this._buttonArea.clientHeight && this._timerModel.isRunning) {
-                this._buttonArea.classList.add('move');
+            if (this._buttonArea && `clientHeight` in this._buttonArea && event.clientX >= this._buttonArea.clientHeight) {
+                this._mouseMoveCallback?.(true);
             } else {
-                this._buttonArea?.classList.remove('move');
+                this._mouseMoveCallback?.(false);
             }
         });
     }
@@ -41,6 +51,15 @@ export class TimerView {
     set urlSearchParamsCallback(value: TimerViewURLSearchParamsCallback) {
         this._urlSearchParamsCallback = value;
         this._urlSearchParamsCallback(this.urlSearchParams);
+    }
+
+    set mouseMoveCallback(value: TimerViewMouseMoveCallback) {
+        this._mouseMoveCallback = value;
+    }
+
+    set buttonAreaClickCallback(value: TimerViewButtonAreaClickCallback) {
+        this._buttonAreaClickCallback = value;
+        this.bindButtonAreaClickEvent();
     }
 
     get urlSearchParams(): URLSearchParams {
@@ -110,4 +129,12 @@ export class TimerView {
 
 export interface TimerViewURLSearchParamsCallback {
     (searchParams: URLSearchParams): void;
+}
+
+export interface TimerViewMouseMoveCallback {
+    (isHover: boolean): void;
+}
+
+export interface TimerViewButtonAreaClickCallback {
+    (): void;
 }
